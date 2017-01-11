@@ -73,7 +73,8 @@ std::unordered_map<label, window> _label_to_window;
 
 void AddLabel(label lb) {
     window w = GA_parentwindow(lb);
-    // make sure label belongs to a known window
+    // make sure label belongs to a known window,
+    // specifically the "Download progress" window.
     if (_window_to_data.find(w) != _window_to_data.end()) {
         _label_to_window[lb] = w;
     }
@@ -85,7 +86,8 @@ void RemoveLabel(label lb) {
 
 void AddProgressBar(progressbar pb, int min, int max, int incr) {
     window w = GA_parentwindow(pb);
-    // make sure progress bar belongs to a known window
+    // make sure progress bar belongs to a known window,
+    // specifically the "Download progress" window.
     if (_window_to_data.find(w) != _window_to_data.end()) {
         _pb_to_window[pb] = w;
         _window_to_data[w].min = min;
@@ -154,6 +156,8 @@ bool IsWindow(control c) {
 void UpdatePackage(label lb, std::string text) {
     window w = _label_to_window[lb];
     if (_window_to_data.find(w) != _window_to_data.end()) {
+        // uri format is : http://<path>/<package-name>_<version>.<extension>
+        // extract package file name
         size_t ps = text.find_last_of("/");
         size_t pe = text.find_last_of("_");
         if (ps == std::string::npos || pe == std::string::npos) {
@@ -161,7 +165,6 @@ void UpdatePackage(label lb, std::string text) {
         } else {
             _window_to_data[w].package = text.substr(ps + 1, pe - ps - 1);
         }
-
     }
 }
 
