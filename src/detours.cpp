@@ -168,26 +168,32 @@ void UpdatePackage(label lb, std::string text) {
     }
 }
 
+void NotifyProgressChanged(std::string package, std::string event, double min, double max, double value) {
+    rhost::host::send_notification("!PkdDload", package, event, min, max, value);
+}
+
 void NotifyProgressStart(window w) {
     if (_window_to_data.find(w) != _window_to_data.end()) {
-        rhost::host::send_notification("!PkgDloadStart",
-            _window_to_data[w].package,
+        NotifyProgressChanged(_window_to_data[w].package, "Start", 
             static_cast<double>(_window_to_data[w].min),
-            static_cast<double>(_window_to_data[w].max));
+            static_cast<double>(_window_to_data[w].max),
+            static_cast<double>(_window_to_data[w].min));
     }
 }
 
 void NotifyProgressEnd(window w) {
     if (_window_to_data.find(w) != _window_to_data.end()) {
-        rhost::host::send_notification("!PkgDloadEnd", _window_to_data[w].package);
+        NotifyProgressChanged(_window_to_data[w].package, "End",
+            static_cast<double>(_window_to_data[w].min),
+            static_cast<double>(_window_to_data[w].max),
+            static_cast<double>(_window_to_data[w].max));
     }
 }
 
 void NotifyProgressStep(window w) {
     if (_window_to_data.find(w) != _window_to_data.end()) {
         _window_to_data[w].value = _window_to_data[w].value + _window_to_data[w].incr;
-        rhost::host::send_notification("!PkgDloadStep",
-            _window_to_data[w].package,
+        NotifyProgressChanged(_window_to_data[w].package, "Step",
             static_cast<double>(_window_to_data[w].min),
             static_cast<double>(_window_to_data[w].max),
             static_cast<double>(_window_to_data[w].value));
@@ -197,8 +203,7 @@ void NotifyProgressStep(window w) {
 void NotifyProgressSet(window w, int value) {
     if (_window_to_data.find(w) != _window_to_data.end()) {
         _window_to_data[w].value = value;
-        rhost::host::send_notification("!PkgDloadStep",
-            _window_to_data[w].package,
+        NotifyProgressChanged(_window_to_data[w].package, "Set",
             static_cast<double>(_window_to_data[w].min),
             static_cast<double>(_window_to_data[w].max),
             static_cast<double>(_window_to_data[w].value));
