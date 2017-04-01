@@ -901,7 +901,7 @@ EXPORTS
     TAG
     TRUELENGTH
     TYPEOF
-    TerminateWindow@8
+    TerminateWindow
     UNIMPLEMENTED
     UNIMPLEMENTED_TYPE
     UNSET_S4_OBJECT
