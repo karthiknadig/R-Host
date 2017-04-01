@@ -2,6 +2,7 @@
 *.suo
 *.user
 *.sln.docstates
+*.tlog
 
 # Build results
 build/
